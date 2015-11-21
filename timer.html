@@ -1,0 +1,65 @@
+<html>
+<head>
+	<title>Cube Timer</title>
+</head>
+<body>
+	<div id="title"><p>Cube Timer</p></div>
+	<div id="scrambleOptions">
+		<div id="cubeType">
+			<ul>
+				<li id="cube2"> 2x2
+				<li id="cube3"> 3x3
+				<li id="cube4"> 4x4
+				<li id="cube5"> 5x5
+				<li id="cube6"> 6x6
+				<li id="cube7"> 7x7
+			</ul>
+		</div>
+		<p> Scramble: <span id="scrambeOut"></span></p>
+	</div>
+	<div id="timer">
+		<p id="timerOut"></p>
+	</div>
+	<div id="times">
+		<p></p>
+	</div>
+	<div id="stats">
+		<div id="currentStat">
+			<p>
+				<p> Current </p>
+				<p id = "mean"> <span class="statHead">Mean: </span></p>
+				<p id = "median"> <span class="statHead">Median: </span></p>
+				<p id = "best"> <span class="statHead">Best Time: </span></p>
+				<p id = "worst"> <span class="statHead">Worst Time: </span></p>
+				<p id = "ao5"> <span class="statHead">Average of 5: </span></p>
+				<p id = "ao12"> <span class="statHead">Average of 12: </span></p>
+				<p id = "stdDev"> <span class="statHead">Standard Deviation: </span></p>
+			</p>
+		</div>
+		<div id="prevStat">
+			<p>
+				<p> Overall </p>
+				<p id = "meanAll"> <span class="statHead">Mean: </span></p>
+				<p id = "medianAll"> <span class="statHead">Median: </span></p>
+				<p id = "bestAll"> <span class="statHead">Best Time: </span></p>
+				<p id = "worstAll"> <span class="statHead">Worst Time: </span></p>
+				<p id = "ao5Best"> <span class="statHead">Best Average of 5: </span></p>
+				<p id = "ao12Best"> <span class="statHead">Best Average of 12: </span></p>
+				<p id = "stdDevAll"> <span class="statHead">Standard Deviation: </span></p>
+			</p>
+		</div>
+	</div>
+	<div id="option">
+		<ul>
+			<li> Timer Size: 
+			  <span id="larger">Larger</span> or 
+			  <span id="smaller">Smaller</span>
+			<li> Inspection Time: 
+			  <span id="inspect15">15 sec</span>, 
+			  <span id="inspect15">10 sec</span>,  
+			  <span id="inspect5">5 sec</span>, 
+			  <span id="inspect0">0 sec</span>
+		</ul>
+	</div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+html {
+	background-color: #DDDDFF;
+}
+
+body {
+	max-width: 1000px;
+	max-height: 1000px;
+	height: calc(100% - 24px);
+	margin: 10px auto;
+	border: 2px solid black;
+	background-color: #EEEEFF;
+}
+
+#title p{
+	 text-align: center;
+	 background-color: #99AAFF;
+	 padding: 10px 0px;
+	 border-bottom: 3px solid black;
+	 font-size: 15pt;
+	 font-family: Arial;
+	 color: #002200;
+}
+
+#scrambleOptions *{
+	float: left;
+}
+
+#scrambleOptions > p {
+	clear: both;
+	margin-left: 50px;
+}
+
+#scrambleOptions {
+	padding: 5px 5px;
+	border-bottom: 2px solid black;
+	overflow: auto;
+}
+
+#cubeType {
+	height: 20px;
+	float: right;
+	margin-right: 85px;
+}
+
+#scrambleOptions ul {
+	list-style: none;
+	width: 60px;
+	min-height: 20px;
+	height: auto;
+	background-color: #BBBBFF;
+	position: absolute;
+	margin-left: 120px;
+	box-shadow: 0px 0px 0px 2px black;
+}
+
+#scrambleOptions ul:hover > li {
+	display: block;
+}
+
+#scrambleOptions ul li {
+	position: relative;
+	display: none;
+	float: none;
+	width: 60px;
+	height: 15pt;
+	padding-top: 2px;
+	text-align: center;
+	border-bottom:  2px solid #DDDDEE;
+	cursor: pointer;
+}
+
+#scrambleOptions ul li:hover {
+	background-color: #AAAACF;
+}
+
+#scrambleOptions ul li:active {
+	box-shadow: inset 0px -1px 1px black,
+				inset 0px  1px 1px black;
+	background-color: #BBBBDD;
+}
+
+#timer {
+	width: 55%;
+	float: left;
+	min-height: 400px;
+	max-height: 900px;
+	height: 75%;
+	box-shadow: 0px 0px 0px 2px black;
+}
+
+#timer #timerOut {
+	text-align: center;
+	font-size: 38pt;
+	position: relative;
+	top: calc(50% - 25px);
+	transform: translateY(-50%);
+	padding: 5px;
+}
+
+#times {
+	float: left;
+	width: 20%;
+	min-height: 400px;
+	height: 75%;
+	max-height: 900px;
+	box-shadow: 0px 2px black;
+}
+
+#times p {
+	padding: 5px;
+}
+
+#stats {
+	float: left;
+	width: 25%;
+	min-height: 400px;
+	height: 75%;
+	max-height: 900px;
+	box-shadow: 0px 0px 0px 2px black;
+}
+
+#currentStat {
+	margin-top: 10px;
+}
+
+#prevStat {
+	margin-top: 15px;
+	border-top: 2px solid black;
+	padding-top: 10px;
+}
+
+#stats div p{
+	margin-left: 5px;
+}
+
+#stats div p:first-child {
+	text-align: center;
+	text-decoration: underline;
+}
+
+#option {
+	clear: both;
+}
+
+#option ul {
+	list-style: none;
+	padding-left: 10px;
+	padding-top: 5px;
+}
+
+#option ul li span {
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+
+#optionShow {
+	font-size: 14pt;
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+	text-align: center;
+	position: relative;
+	top: calc(50% + 30px);
+	transform: translateY(-50%);
+}

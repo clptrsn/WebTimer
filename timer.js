@@ -87,12 +87,12 @@ function padding( numberIn, padding) {
 function logTimes( timeAr ) {
 	var prev = $("#times").children("p").html();
 	var seperator = "";
-	alert(prev)
 	if( prev != "") seperator = ", ";
 
 	var id = timeAr.length - 1;
-	var time = getTimes(timeAr[id]);
-	$("#times").children("p").append(seperator + "<span id = \"solve" + id + "\">" + time + "</span>"); 
+	var solveTime = '' + getTimes(timeAr[id]);
+
+	$("#times").children("p").append(seperator + "<span id = \"solve" + id + "\">" + solveTime + "</span>"); 
 }
 
 function getTimes( time ) {
@@ -102,17 +102,17 @@ function getTimes( time ) {
 	var s;
 
 	if( timeComponents.length == 1) {
-		s = time;
-	}
-	
-	s = Number(timeComponents[0]) + '';
-	for( i = 1; i < timeComponents.length; i++) {
-		s += timeComponents[i] + ":";
+		if( Number(timeComponents[0].split(".")[0]) == 0 ) s = timeComponents[0].slice(1);
+		else s = timeComponents[0];
+	} else {
+		s = Number(timeComponents[0]) + '';
+		for( i = 1; i < timeComponents.length; i++) {
+			s += timeComponents[i] + ":";
+		}
 	}
 
 	return s;	
 }
-
 
 $(document).ready( function() {
 
@@ -137,11 +137,11 @@ $(document).ready( function() {
 				cubeTimer.stopTimer();
 				updateTimer();
 				clearInterval(timerUpdate);
+
 				times.push(cubeTimer.formatTime());
 				logTimes(times);
 
 				cubeTimer.resetTimer();
-
 			}
 		}
 	});

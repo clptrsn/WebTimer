@@ -107,7 +107,7 @@ function getTimes( time ) {
 	} else {
 		s = Number(timeComponents[0]) + '';
 		for( i = 1; i < timeComponents.length; i++) {
-			s += timeComponents[i] + ":";
+			s += ":" + timeComponents[i];
 		}
 	}
 

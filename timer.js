@@ -98,14 +98,19 @@ function logTimes( timeAr ) {
 function getTimes( time ) {
 	time += '';
 	var timeComponents = time.split(":");
+
+	var s;
+
 	if( timeComponents.length == 1) {
-
-		return timeComponents[0];
-
-	} else {
-
-		return Number(timeComponents[0]) + ":" + timeComponents[1];
+		s = time;
 	}
+	
+	s = Number(timeComponents[0]) + '';
+	for( i = 1; i < timeComponents.length; i++) {
+		s += timeComponents[i] + ":";
+	}
+
+	return s;	
 }
 
 
@@ -133,7 +138,6 @@ $(document).ready( function() {
 				updateTimer();
 				clearInterval(timerUpdate);
 				times.push(cubeTimer.formatTime());
-alert(times);
 				logTimes(times);
 
 				cubeTimer.resetTimer();
@@ -142,4 +146,3 @@ alert(times);
 		}
 	});
 });
-

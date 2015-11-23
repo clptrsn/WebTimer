@@ -113,6 +113,8 @@ body {
 
 #times p {
 	padding: 5px;
+	overflow-y: scroll;
+	height: calc(100% - 10px);
 }
 
 #stats {

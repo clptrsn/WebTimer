@@ -87,7 +87,6 @@ function padding( numberIn, padding) {
 function logTimes( timeAr ) {
 	var prev = $("#times").children("p").html();
 	var seperator = "";
-	alert(prev)
 	if( prev != "") seperator = ", ";
 
 	var id = timeAr.length - 1;

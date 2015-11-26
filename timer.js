@@ -3,6 +3,35 @@ var timer = function() {
 	this.startTime = 0;
 	this.stop = 0;
 	this.running = false;
+	this.highestSolveId = 0;
+
+	this.stats = {
+		bestAo5: 0,
+		bestAo12: 0,
+		mean: 0,
+		median: 0,
+		totalTimes: 0,
+		Ao5: 0,
+		Ao12: 0,
+		secondMean: 0,
+		standardDev: 0,
+		worst: 0,
+		best: 0
+	};
+
+	this.overallStats = {
+		mean: 0,
+		median: 0,
+		totalTimes: 0,
+		Ao5: 0,
+		Ao12: 0,
+		secondMean: 0,
+		standardDev: 0,
+		worst: 0,
+		best: 0
+	};
+
+	this.times = [];
 
 	this.resetTimer = function() {
 		this.elapsed = 0;
@@ -37,13 +66,13 @@ var timer = function() {
 		return this.running;
 	}; 
 
-	this.formatTime = function() {
+	this.formatTime = function( msTime ) {
 		var timeValues = [];
 		var result = '';
 
-		var msTime = this.getTimerElapsed();
 		var hundred, seconds, minutes, hours, remainingTime;
 
+		//Calculate the Time components from millisecs
 		hundred = msTime % 1000;
 		remainingTime = (msTime - hundred) / 1000;
 		seconds = remainingTime % 60;
@@ -54,11 +83,11 @@ var timer = function() {
 
 		hundred = Math.floor(hundred / 10);
 
-		if(hours == 0) timeValues = [minutes, seconds, hundred];
+		if(hours == 0) timeValues = [minutes, seconds, hundred]; //trims the hours if the are 0
 		else timeValues = [hours, minutes, seconds, hundred];
 
 		for ( var i = 0; i < timeValues.length; i++) {
-			if( i == 0 && timeValues[i] == 0) continue;
+			if( i == 0 && timeValues[i] == 0) continue; //trims the minutes if necessary
 
 			var seperator;
 			if( i < timeValues.length - 2) seperator = ':'; 
@@ -70,6 +99,29 @@ var timer = function() {
 
 		return result.slice(0,-1);
 	};
+
+	this.logNewTimes = function() {
+		var prev = $("#times").children("p").html();
+		var seperator = "";
+		if( prev != "") seperator = ", ";
+
+		var len = this.times.length - 1;
+		
+		var solveTime = '' + getTimes(this.formatTime(this.times[len].solveTime));
+
+		$("#times").children("p").append(seperator + "<span id = \"solve" + this.times[len].solveId + "\">" + solveTime + "</span>");
+	};
+
+	this.addLatestTime = function() {
+		this.highestSolveId++;
+		var timeObject = {
+			solveId: this.highestSolveId,
+			solveTime: this.elapsed
+		};
+
+		this.times.push(timeObject);
+	};
+
 };
 
 function padding( numberIn, padding) {
@@ -84,19 +136,7 @@ function padding( numberIn, padding) {
 	return numberString.split('').reverse().join('');
 }
 
-function logTimes( timeAr ) {
-	var prev = $("#times").children("p").html();
-	var seperator = "";
-	if( prev != "") seperator = ", ";
-
-	var id = timeAr.length - 1;
-	var solveTime = '' + getTimes(timeAr[id]);
-
-	$("#times").children("p").append(seperator + "<span id = \"solve" + id + "\">" + solveTime + "</span>"); 
-}
-
 function getTimes( time ) {
-	time += '';
 	var timeComponents = time.split(":");
 
 	var s;
@@ -116,13 +156,14 @@ function getTimes( time ) {
 
 $(document).ready( function() {
 
-	var cubeTimer = new timer();
-	var timerText = '';
+	var cubeTimer = new timer();	
 	var timerUpdate;
-	var times = [];
 
 	function updateTimer() {
-		timerText = cubeTimer.formatTime();
+		var timerText = '';
+		var timerTime = cubeTimer.getTimerElapsed();
+
+		timerText = cubeTimer.formatTime( timerTime);
 		$("#timerOut").html(timerText);
 	}
 
@@ -138,9 +179,8 @@ $(document).ready( function() {
 				updateTimer();
 				clearInterval(timerUpdate);
 
-				times.push(cubeTimer.formatTime());
-				logTimes(times);
-
+				cubeTimer.addLatestTime();
+				cubeTimer.logNewTimes();
 				cubeTimer.resetTimer();
 			}
 		}

@@ -125,6 +125,15 @@ var timer = function() {
 		this.times.push(timeObject);
 	};
 
+	this.sortNewTime = function( timerObject ) {
+		var time = timerObject.solveTime;
+		var len = this.sortedTimes.length;
+		for (var i = 0; i < len; i++) {
+			if( time < this.sortedTimes[i].solveTime ) break;
+		}
+		this.sortedTimes.splice( i, 0, timerObject);
+	}
+
 	this.updateCurrentMean = function() {
 		var timeLen = this.times.length;
 		this.stats.meanRunning += this.times[timeLen - 1].solveTime;
@@ -150,9 +159,33 @@ var timer = function() {
 		$("#stdDev").html( outputString.split("</span>")[0] + "</span>" + stdDevOutput );
 	}
 
+	this.updateCurrentMedian = function() {
+		var timeLen = this.times.length;
+		var newTime = this.times[timeLen - 1];
+
+		this.sortNewTime( newTime );
+
+		if( timeLen % 2 == 0) {
+			var start = timeLen / 2 ;
+			this.stats.median = this.sortedTimes[start].solveTime;
+			start--;
+			this.stats.median += this.sortedTimes[start].solveTime;
+			this.stats.median /= 2;
+		} else {
+			this.stats.median = this.sortedTimes[ Math.floor(timeLen / 2) ].solveTime;
+		}
+
+
+		var medianOutput = this.formatTime( this.stats.median );
+		var outputString = $("#median").html();
+
+		$("#median").html( outputString.split("</span>")[0] + "</span>" + medianOutput);
+	}
+
 	this.updateAllCurrentStats = function() {
 		this.updateCurrentMean();
 		this.updateCurrentStandardDev();
+		this.updateCurrentMedian();
 	}
 
 };

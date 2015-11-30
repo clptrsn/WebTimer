@@ -136,8 +136,23 @@ var timer = function() {
 		$("#mean").html(outputString.split("</span>")[0] + "</span>" + meanOutput);
 	}
 
+	this.updateCurrentStandardDev = function() {
+		var timeLen = this.times.length;
+		this.stats.secondMeanRunning += this.times[timeLen - 1].solveTime * this.times[timeLen - 1].solveTime;
+		this.stats.secondMean = Math.round(this.stats.secondMeanRunning / timeLen);
+
+		var variance = this.stats.secondMean - (this.stats.mean * this.stats.mean);
+		this.stats.standardDev = Math.round( Math.sqrt(variance) );
+
+		var stdDevOutput = this.formatTime( this.stats.standardDev );
+		var outputString = $("#stdDev").html();
+
+		$("#stdDev").html( outputString.split("</span>")[0] + "</span>" + stdDevOutput );
+	}
+
 	this.updateAllCurrentStats = function() {
 		this.updateCurrentMean();
+		this.updateCurrentStandardDev();
 	}
 
 };

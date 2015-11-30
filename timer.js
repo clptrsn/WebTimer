@@ -4,15 +4,19 @@ var timer = function() {
 	this.stop = 0;
 	this.running = false;
 	this.highestSolveId = 0;
+	this.times = [];
+	this.sortedTimes = [];
 
 	this.stats = {
 		bestAo5: 0,
 		bestAo12: 0,
+		meanRunning: 0,
 		mean: 0,
 		median: 0,
 		totalTimes: 0,
 		Ao5: 0,
 		Ao12: 0,
+		secondMeanRunning: 0,
 		secondMean: 0,
 		standardDev: 0,
 		worst: 0,
@@ -31,7 +35,6 @@ var timer = function() {
 		best: 0
 	};
 
-	this.times = [];
 
 	this.resetTimer = function() {
 		this.elapsed = 0;
@@ -122,6 +125,21 @@ var timer = function() {
 		this.times.push(timeObject);
 	};
 
+	this.updateCurrentMean = function() {
+		var timeLen = this.times.length;
+		this.stats.meanRunning += this.times[timeLen - 1].solveTime;
+		this.stats.mean = Math.round(this.stats.meanRunning / timeLen);
+
+		var meanOutput = this.formatTime( this.stats.mean );
+		var outputString = $("#mean").html();
+
+		$("#mean").html(outputString.split("</span>")[0] + "</span>" + meanOutput);
+	}
+
+	this.updateAllCurrentStats = function() {
+		this.updateCurrentMean();
+	}
+
 };
 
 function padding( numberIn, padding) {
@@ -181,6 +199,7 @@ $(document).ready( function() {
 
 				cubeTimer.addLatestTime();
 				cubeTimer.logNewTimes();
+				cubeTimer.updateAllCurrentStats();
 				cubeTimer.resetTimer();
 			}
 		}

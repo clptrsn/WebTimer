@@ -26,6 +26,7 @@ var timer = function() {
 		return this.elapsed;		
 	};
 
+
 	this.stopTimer = function() {
 		this.stop = Date.now();
 		this.elapsed = this.stop - this.startTime;
@@ -53,7 +54,8 @@ var timer = function() {
 
 		hundred = Math.floor(hundred / 10);
 
-		timeValues = [hours, minutes, seconds, hundred];
+		if(hours == 0) timeValues = [minutes, seconds, hundred];
+		else timeValues = [hours, minutes, seconds, hundred];
 
 		for ( var i = 0; i < timeValues.length; i++) {
 			if( i == 0 && timeValues[i] == 0) continue;
@@ -61,6 +63,7 @@ var timer = function() {
 			var seperator;
 			if( i < timeValues.length - 2) seperator = ':'; 
 			else seperator = '.';
+
 
 			result += padding(timeValues[i], 2) + seperator;
 		};
@@ -72,7 +75,7 @@ var timer = function() {
 function padding( numberIn, padding) {
 	var numberString = numberIn.toString();
 	numberString = numberString.split('').reverse().join('');
-	var zeros =  padding - numberString.length ;
+	var zeros =  padding - numberString.length;
 
 	for( var i = 0; i < zeros; i++) {
 		numberString += '0';
@@ -81,12 +84,41 @@ function padding( numberIn, padding) {
 	return numberString.split('').reverse().join('');
 }
 
+function logTimes( timeAr ) {
+	var prev = $("#times").children("p").html();
+	var seperator = "";
+	if( prev != "") seperator = ", ";
+
+	var id = timeAr.length - 1;
+	var time = getTimes(timeAr[id]);
+	$("#times").children("p").append(seperator + "<span id = \"solve" + id + "\">" + time + "</span>"); 
+}
+
+function getTimes( time ) {
+	time += '';
+	var timeComponents = time.split(":");
+
+	var s;
+
+	if( timeComponents.length == 1) {
+		s = time;
+	}
+	
+	s = Number(timeComponents[0]) + '';
+	for( i = 1; i < timeComponents.length; i++) {
+		s += timeComponents[i] + ":";
+	}
+
+	return s;	
+}
+
 
 $(document).ready( function() {
 
 	var cubeTimer = new timer();
 	var timerText = '';
 	var timerUpdate;
+	var times = [];
 
 	function updateTimer() {
 		timerText = cubeTimer.formatTime();
@@ -94,6 +126,7 @@ $(document).ready( function() {
 	}
 
 	updateTimer();
+
 	$(document.body).on( "keyup", function( e ) {
 		if( e.keyCode == 32) {
 			if( !cubeTimer.isRunning()) {
@@ -103,9 +136,12 @@ $(document).ready( function() {
 				cubeTimer.stopTimer();
 				updateTimer();
 				clearInterval(timerUpdate);
+				times.push(cubeTimer.formatTime());
+				logTimes(times);
+
 				cubeTimer.resetTimer();
+
 			}
 		}
 	});
 });
-

@@ -184,13 +184,76 @@ var timer = function() {
 		$("#median").html( outputString.split("</span>")[0] + "</span>" + medianOutput);
 	}
 
+	this.updateCurrentWorst = function() {
+		var timeLen = this.times.length;
+		var current = this.times[ timeLen - 1].solveTime;
+		if( timeLen == 1)
+			this.stats.worst = this.times[timeLen - 1];
+		else if( current > this.stats.worst.solveTime) 
+			this.stats.worst = this.times[timeLen - 1];
+
+		var worstOutput = this.formatTime( this.stats.worst.solveTime );
+		var outputString = $("#worst").html();
+
+		$("#worst").html( outputString.split("</span>")[0] + "</span>" + worstOutput );	
+	}
+
+	this.updateCurrentWorst = function() {
+		var timeLen = this.times.length;
+		
+		this.stats.worst = this.sortedTimes[ timeLen - 1];
+
+		var worstOutput = this.formatTime( this.stats.worst.solveTime );
+		var outputString = $("#worst").html();
+
+		$("#worst").html( outputString.split("</span>")[0] + "</span>" + worstOutput );	
+	}
+
+	this.updateCurrentBest = function() {
+		var timeLen = this.times.length;
+
+		this.stats.best = this.sortedTimes[ 0 ];
+
+		var bestOutput = this.formatTime( this.stats.best.solveTime );
+		var outputString = $("#best").html();
+
+		$("#best").html( outputString.split("</span>")[0] + "</span>" + bestOutput );	
+	}
+
+	this.updateCurrentAo5 = function() {
+		var timeLen = this.times.length;
+
+		if( timeLen >= 5) {
+			var last5Times = this.times.slice(-5);
+			trim( last5Times );
+			alert( last5Times );
+		} 
+	}
+
 	this.updateAllCurrentStats = function() {
 		this.updateCurrentMean();
 		this.updateCurrentStandardDev();
 		this.updateCurrentMedian();
+		this.updateCurrentWorst();
+		this.updateCurrentBest();
 	}
 
 };
+
+function trim( timeArray ) {
+	var length = timerArray.length;
+	var bigIndex = 0,
+		smallIndex = 0;
+	for( i = 1; i < length; i++) {
+		if( timerArray[i].solveTime < timerArray[smallIndex].solveTime )
+			smallIndex = i;
+		if( timerArray[i].solveTime < timerArray[bigIndex].solveTime )
+			bigIndex = i;
+	}
+
+	timerArray.slice(bigIndex, 1);
+	timerArray.silce(smallIndex, 1);
+}
 
 function padding( numberIn, padding) {
 	var numberString = numberIn.toString();

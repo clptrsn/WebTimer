@@ -186,20 +186,6 @@ var timer = function() {
 
 	this.updateCurrentWorst = function() {
 		var timeLen = this.times.length;
-		var current = this.times[ timeLen - 1].solveTime;
-		if( timeLen == 1)
-			this.stats.worst = this.times[timeLen - 1];
-		else if( current > this.stats.worst.solveTime) 
-			this.stats.worst = this.times[timeLen - 1];
-
-		var worstOutput = this.formatTime( this.stats.worst.solveTime );
-		var outputString = $("#worst").html();
-
-		$("#worst").html( outputString.split("</span>")[0] + "</span>" + worstOutput );	
-	}
-
-	this.updateCurrentWorst = function() {
-		var timeLen = this.times.length;
 		
 		this.stats.worst = this.sortedTimes[ timeLen - 1];
 
@@ -225,10 +211,45 @@ var timer = function() {
 
 		if( timeLen >= 5) {
 			var last5Times = this.times.slice(-5);
-			trim( last5Times );
-			alert( last5Times );
+			last5Times = trim( last5Times );
+
+			var total = 0;
+
+			for( i = 0; i < last5Times.length; i++) {
+				total += last5Times[i].solveTime; 
+			}
+
+			this.stats.ao5 = total / ( last5Times.length );
+
+			var ao5Output = this.formatTime( this.stats.ao5 );
+			var outputString = $("#ao5").html();
+
+			$("#ao5").html( outputString.split("</span>")[0] + "</span>" + ao5Output);
 		} 
 	}
+
+	this.updateCurrentAo12 = function() {
+		var timeLen = this.times.length;
+
+		if( timeLen >= 12) {
+			var last12Times = this.times.slice(-12);
+			last12Times = trim( last12Times );
+
+			var total = 0;
+
+			for( i = 0; i < last12Times.length; i++) {
+				total += last12Times[i].solveTime; 
+			}
+
+			this.stats.ao12 = total / ( last12Times.length );
+
+			var ao12Output = this.formatTime( this.stats.ao12 );
+			var outputString = $("#ao12").html();
+
+			$("#ao12").html( outputString.split("</span>")[0] + "</span>" + ao12Output);
+		} 
+	}
+
 
 	this.updateAllCurrentStats = function() {
 		this.updateCurrentMean();
@@ -236,23 +257,24 @@ var timer = function() {
 		this.updateCurrentMedian();
 		this.updateCurrentWorst();
 		this.updateCurrentBest();
+		this.updateCurrentAo5();
+		this.updateCurrentAo12();
 	}
 
 };
 
-function trim( timeArray ) {
+function trim( timerArray ) {
 	var length = timerArray.length;
 	var bigIndex = 0,
 		smallIndex = 0;
-	for( i = 1; i < length; i++) {
-		if( timerArray[i].solveTime < timerArray[smallIndex].solveTime )
-			smallIndex = i;
-		if( timerArray[i].solveTime < timerArray[bigIndex].solveTime )
-			bigIndex = i;
-	}
+	
+	timerArray.sort(function(a,b){ return a.solveTime>b.solveTime });
+	timerArray.pop();
 
-	timerArray.slice(bigIndex, 1);
-	timerArray.silce(smallIndex, 1);
+	timerArray.sort(function(a,b){ return b.solveTime>a.solveTime });
+	timerArray.pop();	
+
+	return timerArray;
 }
 
 function padding( numberIn, padding) {

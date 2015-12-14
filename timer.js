@@ -104,15 +104,15 @@ var timer = function() {
 	};
 
 	this.logNewTimes = function() {
-		var prev = $("#times").children("p").html();
+		var prevLen = $("#times").children("p").html().length;
 		var seperator = "";
-		if( prev != "") seperator = ", ";
+		if( prevLen != 0) seperator = ", ";
 
 		var len = this.times.length - 1;
 		
 		var solveTime = '' + getTimes(this.formatTime(this.times[len].solveTime));
 
-		$("#times").children("p").append(seperator + "<span id = \"solve" + this.times[len].solveId + "\">" + solveTime + "</span>");
+		$("#times").children("p").append("<span class=\"loggedTime\" id = \"solve" + this.times[len].solveId + "\">" + seperator + solveTime + "</span>");
 	};
 
 	this.addLatestTime = function() {
@@ -261,6 +261,20 @@ var timer = function() {
 		this.updateCurrentAo12();
 	}
 
+	this.deleteTime = function( timeId ) {
+		var len = this.times.length;
+
+		for( var i = 0; i < len; i++) {
+			if( this.times[i].solveId == timeId ) {
+				this.times.splice(i, 1);
+			}
+
+			if( this.sortedTimes[i].solveId == timeId ) {
+				this.sortedTimes.splice(i, 1);
+			}
+		}
+	}
+
 };
 
 function trim( timerArray ) {
@@ -338,5 +352,25 @@ $(document).ready( function() {
 				cubeTimer.resetTimer();
 			}
 		}
+	});
+
+
+	$(document).on("click", ".loggedTime", function() {
+		var selectedId = $(this).attr('id');
+
+		cubeTimer.deleteTime( selectedId );
+
+		if( $(this).is(":first-child") ) {
+			var nextText = $(this).next().text();
+			var newText;
+
+			newText = nextText.slice(2);
+
+			$(this).next().text( newText );
+
+		}
+		
+		$(this).remove();
+		
 	});
 });

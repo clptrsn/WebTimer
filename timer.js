@@ -136,7 +136,7 @@ var timer = function() {
 
 	this.outputStat = function( statId, time ) {
 		var statOutput = this.formatTime( time );
-		var outputString = $("#median").html();
+		var outputString = $(statId).html();
 
 		$(statId).html( outputString.split("</span>")[0] + "</span>" + statOutput);
 	};
@@ -302,7 +302,7 @@ var timer = function() {
 				sortIndex = i;
 			}
 		}
-		
+
 		this.sortedTimes.splice(sortIndex, 1); //Allows the Median to be updated quickly along with Best/Worst
 
 		this.updateDeletedStats( this.times[idIndex] );

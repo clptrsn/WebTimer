@@ -132,18 +132,22 @@ var timer = function() {
 			if( time < this.sortedTimes[i].solveTime ) break;
 		}
 		this.sortedTimes.splice( i, 0, timerObject);
-	}
+	};
+
+	this.outputStat = function( statId, time ) {
+		var statOutput = this.formatTime( time );
+		var outputString = $("#median").html();
+
+		$(statId).html( outputString.split("</span>")[0] + "</span>" + statOutput);
+	};
 
 	this.updateCurrentMean = function() {
 		var timeLen = this.times.length;
 		this.stats.meanRunning += this.times[timeLen - 1].solveTime;
 		this.stats.mean = Math.round(this.stats.meanRunning / timeLen);
 
-		var meanOutput = this.formatTime( this.stats.mean );
-		var outputString = $("#mean").html();
-
-		$("#mean").html(outputString.split("</span>")[0] + "</span>" + meanOutput);
-	}
+		this.outputStat("#mean", this.stats.mean );
+	};
 
 	this.updateCurrentStandardDev = function() {
 		var timeLen = this.times.length;
@@ -159,7 +163,7 @@ var timer = function() {
 		var outputString = $("#stdDev").html();
 
 		$("#stdDev").html( outputString.split("</span>")[0] + "</span>" + stdDevOutput );
-	}
+	};
 
 	this.updateCurrentMedian = function() {
 		var timeLen = this.times.length;
@@ -182,7 +186,7 @@ var timer = function() {
 		var outputString = $("#median").html();
 
 		$("#median").html( outputString.split("</span>")[0] + "</span>" + medianOutput);
-	}
+	};
 
 	this.updateCurrentWorst = function() {
 		var timeLen = this.times.length;
@@ -193,7 +197,7 @@ var timer = function() {
 		var outputString = $("#worst").html();
 
 		$("#worst").html( outputString.split("</span>")[0] + "</span>" + worstOutput );	
-	}
+	};
 
 	this.updateCurrentBest = function() {
 		var timeLen = this.times.length;
@@ -204,7 +208,7 @@ var timer = function() {
 		var outputString = $("#best").html();
 
 		$("#best").html( outputString.split("</span>")[0] + "</span>" + bestOutput );	
-	}
+	};
 
 	this.updateCurrentAo5 = function() {
 		var timeLen = this.times.length;
@@ -226,7 +230,7 @@ var timer = function() {
 
 			$("#ao5").html( outputString.split("</span>")[0] + "</span>" + ao5Output);
 		} 
-	}
+	};
 
 	this.updateCurrentAo12 = function() {
 		var timeLen = this.times.length;
@@ -248,7 +252,7 @@ var timer = function() {
 
 			$("#ao12").html( outputString.split("</span>")[0] + "</span>" + ao12Output);
 		} 
-	}
+	};
 
 
 	this.updateAllCurrentStats = function() {
@@ -259,21 +263,53 @@ var timer = function() {
 		this.updateCurrentBest();
 		this.updateCurrentAo5();
 		this.updateCurrentAo12();
-	}
+	};
+
+	this.updateDeletedMean = function( time ) {
+		this.stats.meanRunning -= time;
+		if( this.stats.meanRunning <= 0 ) {
+			this.stats.mean = 0;
+		} else {
+			this.stats.mean = Math.round( this.stats.meanRunning / (this.times.length - 1 ) );
+		}
+
+		this.outputStat( "#mean", this.stats.mean );
+	};
+
+	this.updateDeletedStats = function( timeObject ) {
+		this.updateDeletedMean( timeObject.solveTime );
+/*		this.updateDeletedStandardDev( timeId );
+		this.updateDeletedMedian( timeId );
+		this.updateDeletedWorst( timeId );
+		this.updateDeletedBest( timeId );
+		this.updateDeletedAo5( timeId );
+		this.updateDeletedAo12( timeId );
+*/	};
 
 	this.deleteTime = function( timeId ) {
 		var len = this.times.length;
+		var idIndex;
+		var sortIndex;
 
-		for( var i = 0; i < len; i++) {
+		timeId = timeId.slice(5); //trims solve off of id
+
+		for( var i = 0; i < len; i++ ) {
 			if( this.times[i].solveId == timeId ) {
-				this.times.splice(i, 1);
+				idIndex = i;
 			}
 
 			if( this.sortedTimes[i].solveId == timeId ) {
-				this.sortedTimes.splice(i, 1);
+				sortIndex = i;
 			}
 		}
-	}
+		
+		this.sortedTimes.splice(sortIndex, 1); //Allows the Median to be updated quickly along with Best/Worst
+
+		this.updateDeletedStats( this.times[idIndex] );
+
+		this.times.splice(idIndex, 1);
+
+	};
 
 };
 
@@ -309,8 +345,10 @@ function getTimes( time ) {
 	var s;
 
 	if( timeComponents.length == 1) {
-		if( Number(timeComponents[0].split(".")[0]) == 0 ) s = timeComponents[0].slice(1);
-		else s = timeComponents[0];
+		if( Number(timeComponents[0].split(".")[0]) == 0 ) 
+			s = timeComponents[0].slice(1);
+		else 
+			s = timeComponents[0];
 	} else {
 		s = Number(timeComponents[0]) + '';
 		for( i = 1; i < timeComponents.length; i++) {
@@ -367,7 +405,6 @@ $(document).ready( function() {
 			newText = nextText.slice(2);
 
 			$(this).next().text( newText );
-
 		}
 		
 		$(this).remove();
